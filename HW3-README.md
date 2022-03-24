@@ -1,7 +1,7 @@
 # Homework 3 Week 4
 
 - `Book` ve `Author` bilgileri bir dosyadan okunacak ve DB'ye kayıt edilecek.
-- `list`, `search`, `delete(soft-delete)`, `buy` gibi `os.Args` komutları yerine DB sorguları yazılacak. 
+- `list`, `search`, `delete(soft-delete)`, `buy` gibi `os.Args` komutları yerine DB sorguları yazılacak.
 - Bu 2 modelle alakalı GORM sorguları yazılacak.
   - GetByID
   - FindByName
