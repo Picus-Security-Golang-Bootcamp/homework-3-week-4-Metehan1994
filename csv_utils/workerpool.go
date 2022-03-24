@@ -11,10 +11,11 @@ import (
 	"github.com/Metehan1994/HWs/HW3/models"
 )
 
-func ReadCSVWithWorkerPool(filename string) error {
+func ReadCSVWithWorkerPool(filename string) (models.BookList, error) {
 	numJobs := 10
 	jobs := make(chan []string, numJobs)
-	results := make(chan models.Book, numJobs)
+	results := make(chan models.BookInfo, numJobs)
+	b := models.BookList{}
 
 	wg := sync.WaitGroup{}
 
@@ -48,16 +49,17 @@ func ReadCSVWithWorkerPool(filename string) error {
 	}()
 
 	for v := range results {
+		b = append(b, v)
 		fmt.Println(v)
 	}
 
-	return nil
+	return b, nil
 }
 
-func toStruct(jobs <-chan []string, results chan<- models.Book, wg *sync.WaitGroup) {
+func toStruct(jobs <-chan []string, results chan<- models.BookInfo, wg *sync.WaitGroup) {
 	defer wg.Done()
 	for j := range jobs {
-		book := models.Book{}
+		book := models.BookInfo{}
 		book.BookName = j[0]
 		book.NumOfPages, _ = strconv.Atoi(j[1])
 		book.NumOfBooksinStock, _ = strconv.Atoi(j[2])

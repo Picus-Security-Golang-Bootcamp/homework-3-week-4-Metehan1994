@@ -1,6 +1,6 @@
 package models
 
-type Book struct {
+type BookInfo struct {
 	BookName          string
 	NumOfPages        int
 	NumOfBooksinStock int
@@ -12,4 +12,4 @@ type Book struct {
 	}
 }
 
-type BookList []Book
+type BookList []BookInfo
