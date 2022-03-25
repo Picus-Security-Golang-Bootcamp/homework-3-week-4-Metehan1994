@@ -19,7 +19,7 @@ type Book struct {
 }
 
 func (Book) TableName() string {
-	return "Book"
+	return "books"
 }
 
 func (b *Book) ToString() string {

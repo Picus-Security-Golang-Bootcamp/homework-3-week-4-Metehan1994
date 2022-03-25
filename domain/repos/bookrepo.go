@@ -35,13 +35,20 @@ func (b *BookRepository) GetByID(ID int) (*entities.Book, error) {
 	return &book, nil
 }
 
-func (b *BookRepository) FindByName(name string) {
+func (b *BookRepository) FindByWord(name string) {
 	var books []entities.Book
 	b.db.Where("name LIKE ? ", "%"+name+"%").Find(&books)
 
 	for _, author := range books {
 		fmt.Println(author.ToString())
 	}
+}
+
+func (b *BookRepository) FindByName(name string) {
+	var book entities.Book
+	b.db.Where("name = ? ", name).Find(&book)
+
+	fmt.Println("found:", book.Name)
 }
 
 func (b *BookRepository) DeleteByName(name string) error {
@@ -72,7 +79,7 @@ func (b *BookRepository) Buy(quantity, id int) error {
 	} else if book.NumOfBooksInStock < quantity {
 		return fmt.Errorf("not Enough Book. Books: %d", book.NumOfBooksInStock)
 	} else {
-		fmt.Println("Successful Operation.")
+		fmt.Println("Successfully Bought.")
 	}
 
 	result = b.db.Model(&book).Where("id = ? AND num_of_books_in_stock >= ?", id, quantity).
@@ -114,7 +121,7 @@ func (b *BookRepository) InsertSampleData(bookList models.BookList) {
 	}
 
 	for _, eachBook := range books {
-		b.db.Where(entities.Book{Name: eachBook.Name}).FirstOrCreate(&eachBook)
+		b.db.Unscoped().Where(entities.Book{Name: eachBook.Name}).FirstOrCreate(&eachBook)
 	}
 
 }

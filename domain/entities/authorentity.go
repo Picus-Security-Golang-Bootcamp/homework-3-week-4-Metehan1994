@@ -14,7 +14,7 @@ type Author struct {
 }
 
 func (Author) TableName() string {
-	return "Author"
+	return "authors"
 }
 
 func (a *Author) ToString() string {

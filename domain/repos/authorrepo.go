@@ -35,13 +35,20 @@ func (a *AuthorRepository) GetByID(ID int) (*entities.Author, error) {
 	return &author, nil
 }
 
-func (a *AuthorRepository) FindByName(name string) {
+func (a *AuthorRepository) FindByWord(name string) {
 	var authors []entities.Author
 	a.db.Where("name LIKE ? ", "%"+name+"%").Find(&authors)
 
 	for _, author := range authors {
 		fmt.Println(author.ToString())
 	}
+}
+
+func (a *AuthorRepository) FindByName(name string) {
+	var author entities.Author
+	a.db.Where("name = ? ", name).Find(&author)
+
+	fmt.Println("found:", author.Name)
 }
 
 func (a *AuthorRepository) DeleteByName(name string) error {
@@ -89,7 +96,7 @@ func (a *AuthorRepository) InsertSampleData(bookList models.BookList) {
 	}
 
 	for _, author := range authors {
-		a.db.Where(entities.Author{ID: author.ID}).Attrs(entities.Author{Name: author.Name}).FirstOrCreate(&author)
+		a.db.Unscoped().Where(entities.Author{ID: author.ID}).Attrs(entities.Author{Name: author.Name}).FirstOrCreate(&author)
 	}
 
 }

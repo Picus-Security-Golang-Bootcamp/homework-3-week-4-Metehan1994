@@ -2,7 +2,7 @@
 
 ## Overview
 
-A prototype of program reading CSV file, connecting database on PostGreSQL and creating two tables on it which are "Author" and "Book".
+A prototype of program reading CSV file, connecting database on PostGreSQL and creating two tables on it which are "Author" and "Book" is created.
 
 ## How to Use the App ?
 

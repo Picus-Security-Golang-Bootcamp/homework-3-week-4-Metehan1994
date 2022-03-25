@@ -52,7 +52,9 @@ func main() {
 	// }
 	// fmt.Println(book.ToString())
 
-	//bookRepo.FindByName("and") //FindBookByName
+	//bookRepo.FindByWord("and") //FindBookByWord
+
+	//bookRepo.FindByName("War and Peace") //FindBookByWholeName
 
 	//bookRepo.DeleteByName("The Metamorphosis") //DeleteBookByName
 
@@ -77,15 +79,17 @@ func main() {
 
 	//authorRepo.List() //ListAuthors
 
-	// author, err := authorRepo.GetByID(8) //GetAuthorByID
+	// author, err := authorRepo.GetByID(3) //GetAuthorByID
 	// if err != nil {
 	// 	log.Fatal(err)
 	// }
 	// fmt.Println(author.ToString())
 
-	//authorRepo.FindByName("el") //FindAuthorByName
+	//authorRepo.FindByWord("el") //FindAuthorByWord
 
-	//authorRepo.DeleteByName("Ahmet") //DeleteAuthorByName
+	//authorRepo.FindByName("Lev Tolstoy") //FindBookByWholeName
+
+	//authorRepo.DeleteByName("Lev Tolstoy") //DeleteAuthorByName
 
 	//authorRepo.DeleteById(8) //DeleteAuthorByID
 
