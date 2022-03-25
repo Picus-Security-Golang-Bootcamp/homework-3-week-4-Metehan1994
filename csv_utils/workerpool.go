@@ -2,7 +2,6 @@ package csv_utils
 
 import (
 	"encoding/csv"
-	"fmt"
 	"log"
 	"os"
 	"strconv"
@@ -50,7 +49,7 @@ func ReadCSVWithWorkerPool(filename string) (models.BookList, error) {
 
 	for v := range results {
 		b = append(b, v)
-		fmt.Println(v)
+		//fmt.Println(v)
 	}
 
 	return b, nil
