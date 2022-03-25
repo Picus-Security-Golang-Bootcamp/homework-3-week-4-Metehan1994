@@ -8,6 +8,7 @@ type BookInfo struct {
 	StockCode         string
 	ISBN              string
 	Author            struct {
+		AuthorID   int
 		AuthorName string
 	}
 }

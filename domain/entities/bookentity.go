@@ -14,8 +14,8 @@ type Book struct {
 	Price             int
 	StockCode         string
 	ISBN              string
-	AuthorName        string
-	Author            Author `gorm:"foreignKey:Name;references:AuthorName"`
+	AuthorID          uint
+	Author            Author `gorm:"foreignKey:AuthorID;references:ID"`
 }
 
 func (Book) TableName() string {
@@ -23,6 +23,6 @@ func (Book) TableName() string {
 }
 
 func (b *Book) ToString() string {
-	return fmt.Sprintf("ID : %d, Name : %s, Pages: %d, Price: %d, ISBN: %s, AuthorName: %s, CreatedAt : %s",
-		b.ID, b.Name, b.NumOfPages, b.Price, b.ISBN, b.AuthorName, b.CreatedAt.Format("2006-01-02 15:04:05"))
+	return fmt.Sprintf("ID : %d, Name : %s, Pages: %d, Price: %d, ISBN: %s, AuthorID: %d, CreatedAt : %s",
+		b.ID, b.Name, b.NumOfPages, b.Price, b.ISBN, b.AuthorID, b.CreatedAt.Format("2006-01-02 15:04:05"))
 }

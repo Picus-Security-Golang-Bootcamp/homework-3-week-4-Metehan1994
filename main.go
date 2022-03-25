@@ -14,7 +14,7 @@ var filename string = "book.csv"
 
 func main() {
 	//CSV to book struct
-	bookList, err := csv_utils.ReadCSVWithWorkerPool(filename)
+	bookList, err := csv_utils.ReadCSV(filename)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -37,24 +37,6 @@ func main() {
 	authorRepo.Migrations()
 	authorRepo.InsertSampleData(bookList)
 
-	//Queries for Author repo
-
-	//authorRepo.List() //ListAuthors
-
-	// author, err := authorRepo.GetByID(10) //GetAuthorByID
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-	// fmt.Println(author.ToString())
-
-	// authorRepo.FindByName("el") //FindAuthorByName
-
-	// authorRepo.Create("Seneca") //CreateNewAuthor
-
-	//authorRepo.DeleteByName("Ahmet") //DeleteAuthorByName
-
-	// authorRepo.DeleteById(8) //DeleteAuthorByID
-
 	//Book Repo
 	bookRepo := repos.NewBookRepository(db)
 	bookRepo.Migrations()
@@ -64,7 +46,7 @@ func main() {
 
 	//bookRepo.List() //ListBooks
 
-	// book, err := bookRepo.GetByID(5) //GetBookByID
+	// book, err := bookRepo.GetByID(2) //GetBookByID
 	// if err != nil {
 	// 	log.Fatal(err)
 	// }
@@ -72,13 +54,11 @@ func main() {
 
 	//bookRepo.FindByName("and") //FindBookByName
 
-	//bookRepo.Create("The Metamorphosis", 104, 10, 30, "BOOK1121", "9789750719356", "Franz Kafka") //CreateNewBook
-
-	// bookRepo.DeleteByName("The Metamorphosis") //DeleteBookByName
+	//bookRepo.DeleteByName("The Metamorphosis") //DeleteBookByName
 
 	//bookRepo.DeleteById(5) //DeleteBookByID
 
-	// books, err := bookRepo.GetBooksWithAuthorInformation()
+	// books, err := bookRepo.GetBooksWithAuthorInformation() ////Get book with author
 	// if err != nil {
 	// 	log.Fatal(err)
 	// }
@@ -89,5 +69,31 @@ func main() {
 	// err = bookRepo.Buy(12, 7) //BuyBookByID
 	// if err != nil {
 	// 	fmt.Println(err)
+	// }
+
+	/***********/
+
+	//Queries for Author repo
+
+	//authorRepo.List() //ListAuthors
+
+	// author, err := authorRepo.GetByID(8) //GetAuthorByID
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	// fmt.Println(author.ToString())
+
+	//authorRepo.FindByName("el") //FindAuthorByName
+
+	//authorRepo.DeleteByName("Ahmet") //DeleteAuthorByName
+
+	//authorRepo.DeleteById(8) //DeleteAuthorByID
+
+	// authors, err := authorRepo.GetAuthorsWithBookInformation() //Get author with book
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	// for _, author := range authors {
+	// 	fmt.Println(author)
 	// }
 }

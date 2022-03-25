@@ -44,18 +44,6 @@ func (a *AuthorRepository) FindByName(name string) {
 	}
 }
 
-func (a *AuthorRepository) Create(name string) error {
-	var author entities.Author
-	author.Name = name
-	result := a.db.Create(&author)
-
-	if result.Error != nil {
-		return result.Error
-	}
-
-	return nil
-}
-
 func (a *AuthorRepository) DeleteByName(name string) error {
 	result := a.db.Where("name = ?", name).Delete(&entities.Author{})
 
@@ -76,14 +64,14 @@ func (a *AuthorRepository) DeleteById(id int) error {
 	return nil
 }
 
-// func (a *AuthorRepository) GetAuthorsWithBookInformation() ([]entities.Author, error) {
-// 	var authors []entities.Author
-// 	result := a.db.Preload("Book").Find(&authors)
-// 	if result.Error != nil {
-// 		return nil, result.Error
-// 	}
-// 	return authors, nil
-// }
+func (a *AuthorRepository) GetAuthorsWithBookInformation() ([]entities.Author, error) {
+	var authors []entities.Author
+	result := a.db.Preload("Book").Find(&authors)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return authors, nil
+}
 
 func (a *AuthorRepository) Migrations() {
 	a.db.AutoMigrate(&entities.Author{})
@@ -95,12 +83,13 @@ func (a *AuthorRepository) InsertSampleData(bookList models.BookList) {
 	for _, book := range bookList {
 		newAuthor := entities.Author{
 			Name: book.Author.AuthorName,
+			ID:   uint(book.Author.AuthorID),
 		}
 		authors = append(authors, newAuthor)
 	}
 
 	for _, author := range authors {
-		a.db.Where(entities.Author{Name: author.Name}).FirstOrCreate(&author)
+		a.db.Where(entities.Author{ID: author.ID}).Attrs(entities.Author{Name: author.Name}).FirstOrCreate(&author)
 	}
 
 }

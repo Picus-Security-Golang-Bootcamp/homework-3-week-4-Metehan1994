@@ -8,7 +8,9 @@ import (
 
 type Author struct {
 	gorm.Model
-	Name string
+	ID   uint   `gorm:"primaryKey"`
+	Name string `gorm:"unique"`
+	Book []Book
 }
 
 func (Author) TableName() string {

@@ -44,24 +44,6 @@ func (b *BookRepository) FindByName(name string) {
 	}
 }
 
-func (b *BookRepository) Create(name string, pages int, quantity int, price int, stockCode string, ISBN string, AuthorName string) error {
-	var book entities.Book
-	book.Name = name
-	book.NumOfPages = pages
-	book.NumOfBooksInStock = quantity
-	book.Price = price
-	book.StockCode = stockCode
-	book.ISBN = ISBN
-	book.AuthorName = AuthorName
-	result := b.db.Create(&book)
-
-	if result.Error != nil {
-		return result.Error
-	}
-
-	return nil
-}
-
 func (b *BookRepository) DeleteByName(name string) error {
 	result := b.db.Where("name = ?", name).Delete(&entities.Book{})
 
@@ -126,7 +108,7 @@ func (b *BookRepository) InsertSampleData(bookList models.BookList) {
 			Price:             book.Price,
 			StockCode:         book.StockCode,
 			ISBN:              book.ISBN,
-			AuthorName:        book.Author.AuthorName,
+			AuthorID:          uint(book.Author.AuthorID),
 		}
 		books = append(books, newBook)
 	}
