@@ -37,7 +37,7 @@ func (a *AuthorRepository) GetByID(ID int) (*entities.Author, error) {
 
 func (a *AuthorRepository) FindByWord(name string) {
 	var authors []entities.Author
-	a.db.Where("name LIKE ? ", "%"+name+"%").Find(&authors)
+	a.db.Where("name ILIKE ? ", "%"+name+"%").Find(&authors)
 
 	for _, author := range authors {
 		fmt.Println(author.ToString())
@@ -51,8 +51,27 @@ func (a *AuthorRepository) FindByName(name string) {
 	fmt.Println("found:", author.Name)
 }
 
+func (a *AuthorRepository) Create(author entities.Author) error {
+	result := a.db.Where("name = ?", author.Name).FirstOrCreate(&author)
+	if result.Error != nil {
+		return result.Error
+	}
+	return nil
+}
+
 func (a *AuthorRepository) DeleteByName(name string) error {
-	result := a.db.Where("name = ?", name).Delete(&entities.Author{})
+	var author entities.Author
+	result := a.db.Unscoped().Where("name = ?", name).Find(&author)
+	if result.Error != nil {
+		return result.Error
+	} else if author.Name != "" && !author.DeletedAt.Valid {
+		fmt.Println("Valid author name, deleted:", name)
+	} else if author.Name != "" && author.DeletedAt.Valid {
+		fmt.Println("It has been already deleted.")
+	} else {
+		fmt.Println("Invalid author name, no deletion.")
+	}
+	result = a.db.Where("name = ?", name).Delete(&entities.Author{})
 
 	if result.Error != nil {
 		return result.Error
@@ -62,7 +81,14 @@ func (a *AuthorRepository) DeleteByName(name string) error {
 }
 
 func (a *AuthorRepository) DeleteById(id int) error {
-	result := a.db.Delete(&entities.Author{}, id)
+	var author entities.Author
+	result := a.db.First(&author, id)
+	if result.Error != nil {
+		return result.Error
+	} else {
+		fmt.Println("Valid ID, deleted:", id)
+	}
+	result = a.db.Delete(&entities.Author{}, id)
 
 	if result.Error != nil {
 		return result.Error
@@ -78,6 +104,24 @@ func (a *AuthorRepository) GetAuthorsWithBookInformation() ([]entities.Author, e
 		return nil, result.Error
 	}
 	return authors, nil
+}
+
+func (a *AuthorRepository) BooksOfAuthors(name string) error {
+	var author entities.Author
+	result := a.db.Where("name = ?", name).Preload("Book").Find(&author)
+	if result.Error != nil {
+		return result.Error
+	}
+	Books := author.Book
+	if len(Books) == 0 {
+		fmt.Println("No book info for given name.")
+	} else {
+		fmt.Println("Writer: ", name)
+		for i, book := range Books {
+			fmt.Printf("Book %d: %s\n", i+1, book.Name)
+		}
+	}
+	return nil
 }
 
 func (a *AuthorRepository) Migrations() {
