@@ -13,10 +13,12 @@ type AuthorRepository struct {
 	db *gorm.DB
 }
 
+//NewAuthorRepository create a database for author
 func NewAuthorRepository(db *gorm.DB) *AuthorRepository {
 	return &AuthorRepository{db: db}
 }
 
+//List gives output for authors
 func (a *AuthorRepository) List() {
 	var authors []entities.Author
 	a.db.Find(&authors)
@@ -26,6 +28,7 @@ func (a *AuthorRepository) List() {
 	}
 }
 
+//GetByID provides the author info for a given ID
 func (a *AuthorRepository) GetByID(ID int) (*entities.Author, error) {
 	var author entities.Author
 	result := a.db.First(&author, ID)
@@ -35,6 +38,7 @@ func (a *AuthorRepository) GetByID(ID int) (*entities.Author, error) {
 	return &author, nil
 }
 
+//FindByWord lists the authors with the given word case-insensitively
 func (a *AuthorRepository) FindByWord(name string) {
 	var authors []entities.Author
 	a.db.Where("name ILIKE ? ", "%"+name+"%").Find(&authors)
@@ -44,6 +48,7 @@ func (a *AuthorRepository) FindByWord(name string) {
 	}
 }
 
+//FindByName provides the author with the input of full name
 func (a *AuthorRepository) FindByName(name string) {
 	var author entities.Author
 	a.db.Where("name = ? ", name).Find(&author)
@@ -51,6 +56,7 @@ func (a *AuthorRepository) FindByName(name string) {
 	fmt.Println("found:", author.Name)
 }
 
+//Create creates a new author
 func (a *AuthorRepository) Create(author entities.Author) error {
 	result := a.db.Where("name = ?", author.Name).FirstOrCreate(&author)
 	if result.Error != nil {
@@ -59,6 +65,7 @@ func (a *AuthorRepository) Create(author entities.Author) error {
 	return nil
 }
 
+//DeleteByName deletes the author with the given full name
 func (a *AuthorRepository) DeleteByName(name string) error {
 	var author entities.Author
 	result := a.db.Unscoped().Where("name = ?", name).Find(&author)
@@ -80,6 +87,7 @@ func (a *AuthorRepository) DeleteByName(name string) error {
 	return nil
 }
 
+//DeleteByID applies a soft delete to an author with given ID
 func (a *AuthorRepository) DeleteById(id int) error {
 	var author entities.Author
 	result := a.db.First(&author, id)
@@ -97,6 +105,7 @@ func (a *AuthorRepository) DeleteById(id int) error {
 	return nil
 }
 
+//GetAuthorsWithBookInformation gives output of authors with their books info
 func (a *AuthorRepository) GetAuthorsWithBookInformation() ([]entities.Author, error) {
 	var authors []entities.Author
 	result := a.db.Preload("Book").Find(&authors)
@@ -106,6 +115,7 @@ func (a *AuthorRepository) GetAuthorsWithBookInformation() ([]entities.Author, e
 	return authors, nil
 }
 
+//BooksOfAuthors finds the books of author searched
 func (a *AuthorRepository) BooksOfAuthors(name string) error {
 	var author entities.Author
 	result := a.db.Where("name = ?", name).Preload("Book").Find(&author)
@@ -124,10 +134,12 @@ func (a *AuthorRepository) BooksOfAuthors(name string) error {
 	return nil
 }
 
+//Migrations form an author table in db
 func (a *AuthorRepository) Migrations() {
 	a.db.AutoMigrate(&entities.Author{})
 }
 
+//InsertSampleData creates a list of authors
 func (a *AuthorRepository) InsertSampleData(bookList models.BookList) {
 
 	authors := []entities.Author{}

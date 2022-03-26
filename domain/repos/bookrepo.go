@@ -13,10 +13,12 @@ type BookRepository struct {
 	db *gorm.DB
 }
 
+//NewBookRepository create a database for book
 func NewBookRepository(db *gorm.DB) *BookRepository {
 	return &BookRepository{db: db}
 }
 
+//List gives output for books
 func (b *BookRepository) List() {
 	var books []entities.Book
 	b.db.Find(&books)
@@ -26,6 +28,7 @@ func (b *BookRepository) List() {
 	}
 }
 
+//GetByID provides the book info for a given ID
 func (b *BookRepository) GetByID(ID int) (*entities.Book, error) {
 	var book entities.Book
 	result := b.db.First(&book, ID)
@@ -35,6 +38,7 @@ func (b *BookRepository) GetByID(ID int) (*entities.Book, error) {
 	return &book, nil
 }
 
+//FindByWord lists the books with the given word case-insensitively
 func (b *BookRepository) FindByWord(name string) {
 	var books []entities.Book
 	b.db.Where("name ILIKE ? ", "%"+name+"%").Find(&books)
@@ -44,6 +48,7 @@ func (b *BookRepository) FindByWord(name string) {
 	}
 }
 
+//FindByName provides the book with the input of full name
 func (b *BookRepository) FindByName(name string) {
 	var book entities.Book
 	b.db.Where("name = ? ", name).Find(&book)
@@ -51,6 +56,7 @@ func (b *BookRepository) FindByName(name string) {
 	fmt.Println("found:", book.Name)
 }
 
+//Create creates a new book
 func (b *BookRepository) Create(book entities.Book) error {
 	result := b.db.Where("name = ?", book.Name).FirstOrCreate(&book)
 	if result.Error != nil {
@@ -59,6 +65,7 @@ func (b *BookRepository) Create(book entities.Book) error {
 	return nil
 }
 
+//DeleteByName deletes the book with the given full name
 func (b *BookRepository) DeleteByName(name string) error {
 	var book entities.Book
 	result := b.db.Unscoped().Where("name = ?", name).Find(&book)
@@ -80,6 +87,7 @@ func (b *BookRepository) DeleteByName(name string) error {
 	return nil
 }
 
+//DeleteByID applies a soft delete to a book with given ID
 func (b *BookRepository) DeleteById(id int) error {
 	var book entities.Book
 	result := b.db.First(&book, id)
@@ -97,6 +105,7 @@ func (b *BookRepository) DeleteById(id int) error {
 	return nil
 }
 
+//Buy creates a purchase for a book with its ID in a given quantity
 func (b *BookRepository) Buy(quantity, id int) error {
 	var book entities.Book
 	result := b.db.First(&book, id)
@@ -117,6 +126,7 @@ func (b *BookRepository) Buy(quantity, id int) error {
 	return nil
 }
 
+//MaxPrice finds the most expensive book
 func (b *BookRepository) MaxPrice() error {
 	var maxPrice int
 	var book entities.Book
@@ -138,6 +148,7 @@ func (b *BookRepository) MaxPrice() error {
 	return nil
 }
 
+//PriceBetweenFromLowerToUpper lists the books in a price range
 func (b *BookRepository) PriceBetweenFromLowerToUpper(lower, upper int) error {
 	var books []entities.Book
 
@@ -152,6 +163,7 @@ func (b *BookRepository) PriceBetweenFromLowerToUpper(lower, upper int) error {
 	return nil
 }
 
+//GetBooksWithBookInformation gives output of books with their author info
 func (b *BookRepository) GetBooksWithAuthorInformation() ([]entities.Book, error) {
 	var books []entities.Book
 	result := b.db.Preload("Author").Find(&books)
@@ -161,10 +173,12 @@ func (b *BookRepository) GetBooksWithAuthorInformation() ([]entities.Book, error
 	return books, nil
 }
 
+//Migrations form a book table in db
 func (b *BookRepository) Migrations() {
 	b.db.AutoMigrate(&entities.Book{})
 }
 
+//InsertSampleData creates a list of books
 func (b *BookRepository) InsertSampleData(bookList models.BookList) {
 
 	books := []entities.Book{}

@@ -8,6 +8,7 @@ import (
 	"github.com/Metehan1994/HWs/HW3/models"
 )
 
+//ReadCSV reads csv and returns a book list
 func ReadCSV(filename string) (models.BookList, error) {
 	f, err := os.Open(filename)
 	if err != nil {

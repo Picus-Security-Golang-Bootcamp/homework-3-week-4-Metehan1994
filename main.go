@@ -44,6 +44,7 @@ func main() {
 	bookRepo.Migrations()
 	bookRepo.InsertSampleData(bookList)
 
+	//QueriesforRepos exemplifies some queries for both authors and books tables
 	QueriesforRepos(authorRepo, bookRepo)
 }
 
